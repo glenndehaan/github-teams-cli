@@ -1,6 +1,6 @@
 # GitHub Teams CLI
 
-
+A simple CLI to get stuff automated for teams
 
 ## Structure
 - NodeJS
