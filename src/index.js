@@ -2,6 +2,7 @@
  * Import vendor modules
  */
 const program = require('commander');
+const atob = require('atob');
 
 /**
  * Import own modules
@@ -26,6 +27,7 @@ program.name('github-teams-cli');
  */
 program
     .requiredOption('-t, --token <value>', 'set the GitHub authentication token')
+    .option('-b, --base64', 'toggles the secret input to base64')
     .option('-v, --verbose', 'output extra debugging');
 
 /**
@@ -56,7 +58,9 @@ program
         subcommand = true;
         verbose(program.verbose);
         github(program.token);
-        actions.addSecret(org, repository, name, secret);
+
+        const secretPass = program.base64 ? atob(secret) : secret;
+        actions.addSecret(org, repository, name, secretPass);
     });
 
 /**

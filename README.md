@@ -23,6 +23,7 @@ Usage: github-teams-cli [options] [command]
 
 Options:
   -t, --token <value>                            set the GitHub authentication token
+  -b, --base64                                   toggles the secret input to base64
   -v, --verbose                                  output extra debugging
   -h, --help                                     display help for command
 
