@@ -1,0 +1,55 @@
+{
+  "name": "github-teams-cli",
+  "version": "0.0.0",
+  "description": "A simple telemetry system to monitor your remote applications",
+  "bin": "src/index.js",
+  "scripts": {
+    "prestart": "rimraf ./dist",
+    "start": "nodemon --watch app --exec 'npm run lint && node ./src/index.js --help'",
+    "prebuild": "rimraf ./dist",
+    "build": "pkg ./package.json --targets node14-linux-x64,node14-macos-x64,node14-win-x64 --out-path ./dist",
+    "lint": "eslint -c ./package.json ./"
+  },
+  "engines": {
+    "node": "^14.0.0"
+  },
+  "author": "Glenn de Haan",
+  "license": "MIT",
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2018
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "rules": {
+      "no-console": 0,
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "indent": [
+        "error",
+        4
+      ]
+    },
+    "extends": [
+      "eslint:recommended"
+    ]
+  },
+  "eslintIgnore": [
+    "dist"
+  ],
+  "dependencies": {
+    "@octokit/core": "^3.2.1",
+    "commander": "^6.2.0",
+    "eslint": "^7.13.0",
+    "pkg": "^4.4.9",
+    "rimraf": "^3.0.2",
+    "tweetsodium": "0.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  }
+}

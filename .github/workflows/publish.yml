@@ -1,0 +1,62 @@
+# This workflow will do a clean install of node dependencies and build the source code
+# When the workflow succeeds the package will be published
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - name: Install dependencies
+        run: npm ci
+      - name: Build github-teams-cli
+        run: npm run build
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.tagName.outputs.tag }}
+          draft: false
+          prerelease: false
+      - name: Upload github-teams-cli-linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/github-teams-cli-linux
+          asset_name: github-teams-cli-linux
+          asset_content_type: application/x-executable
+      - name: Upload github-teams-cli-macos
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/github-teams-cli-macos
+          asset_name: github-teams-cli-macos
+          asset_content_type: application/x-mach-binary
+      - name: Upload github-teams-cli-win.exe
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/github-teams-cli-win.exe
+          asset_name: github-teams-cli-win.exe
+          asset_content_type: application/x-dosexec
